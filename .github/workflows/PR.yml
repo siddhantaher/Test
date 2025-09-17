@@ -5,21 +5,24 @@ on:
     types: [opened, edited, synchronize, reopened]
 
 jobs:
-  validate:
+  branch-name-check:
     runs-on: ubuntu-latest
     steps:
       - name: Check branch name
         run: |
-          echo "Branch name: ${{ github.head_ref }}"
+          echo "🔍 Branch name: ${{ github.head_ref }}"
           if [[ ! "${{ github.head_ref }}" =~ ^feature\/[a-z0-9._-]+$ ]]; then
             echo "❌ Branch name must start with 'feature/' followed by lowercase letters, numbers, dots, underscores, or hyphens."
             exit 1
           fi
           echo "✅ Branch name is valid."
 
+  pr-title-check:
+    runs-on: ubuntu-latest
+    steps:
       - name: Check PR title
         run: |
-          echo "PR title: ${{ github.event.pull_request.title }}"
+          echo "🔍 PR title: ${{ github.event.pull_request.title }}"
           if [[ ! "${{ github.event.pull_request.title }}" =~ ^\[FEATURE\]\ .+ ]]; then
             echo "❌ PR title must start with '[FEATURE] ' followed by a description."
             exit 1
